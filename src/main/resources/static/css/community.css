@@ -1,0 +1,16 @@
+.main{
+    margin:30px;
+    background-color: white;
+}
+body{
+    background-color: #efefef;
+}
+.submit{
+    float: right;
+    margin-bottom: 15px;
+}
+.text-desc{
+    font-size: 12px;
+    font-weight: normal;
+    color: #999;
+}

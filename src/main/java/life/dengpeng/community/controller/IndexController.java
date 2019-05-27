@@ -1,6 +1,7 @@
 package life.dengpeng.community.controller;
 
 import jdk.nashorn.internal.parser.Token;
+import life.dengpeng.community.dto.PageDTO;
 import life.dengpeng.community.dto.QuestionDTO;
 import life.dengpeng.community.mapper.UserMapper;
 import life.dengpeng.community.model.TbUser;
@@ -29,7 +30,9 @@ public class IndexController {
     private TbQuestionService tbQuestionService;
 
     @GetMapping("/")
-    public String index(HttpServletRequest httpServletRequest,Model model){
+    public String index(HttpServletRequest httpServletRequest,Model model,
+                        @RequestParam(name = "page",defaultValue = "1")Integer page,
+                        @RequestParam(name = "size",defaultValue = "3")Integer size){
         Cookie[] cookies = httpServletRequest.getCookies();
         if(cookies != null && cookies.length>=0) {
             for (Cookie cookie : cookies) {
@@ -43,8 +46,8 @@ public class IndexController {
                 }
             }
         }
-        List<QuestionDTO> questionList = tbQuestionService.findQuestionAll();
-        model.addAttribute("questionList",questionList);
+        PageDTO pageDTO = tbQuestionService.findQuestionPage(page, size);
+        model.addAttribute("pageDTO",pageDTO);
 
         return "index";
     }

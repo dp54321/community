@@ -27,5 +27,15 @@ public interface TbQuestionMapper {
     @Select("select count(1) from tb_question")
     Integer findQuestionCount();
 
+    @Select("select id,title,description,gmt_create,gmt_modifled,creator,comment_count,view_count,like_count,tag from tb_question " +
+            "where creator = #{creator} limit #{page},#{size} ")
+    List<TbQuestion> findQuestionByUserId(@Param(value = "creator")Long creator,
+                                          @Param(value = "page") Integer page,
+                                          @Param(value = "size") Integer size);
+
+    @Select("select count(1) from tb_question where creator = #{creator}")
+    Integer findQuestionCountByUserId(@Param(value = "creator")Long creator);
+
+
 
 }

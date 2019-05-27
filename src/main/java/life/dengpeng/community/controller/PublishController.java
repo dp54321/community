@@ -44,6 +44,9 @@ public class PublishController {
             return "publish";
         }
         TbUser user = (TbUser) request.getSession().getAttribute("user");
+        if(user == null){
+            return "redirect:/";
+        }
         tbQuestion.setCreator(user.getUid());
         tbQuestion.setGmtCreate(System.currentTimeMillis());
         tbQuestion.setGmtModifled(tbQuestion.getGmtCreate());

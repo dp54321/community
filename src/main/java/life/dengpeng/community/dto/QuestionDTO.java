@@ -3,12 +3,14 @@ package life.dengpeng.community.dto;
 import life.dengpeng.community.model.TbUser;
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * @author dp
  * @create 2019-05-24 18:44
  */
 @Data
-public class QuestionDTO {
+public class QuestionDTO implements Serializable {
     private Long id;
     private String title;
     private String description;

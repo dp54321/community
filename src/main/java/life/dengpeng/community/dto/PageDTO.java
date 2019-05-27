@@ -2,6 +2,7 @@ package life.dengpeng.community.dto;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +11,7 @@ import java.util.List;
  * @create 2019-05-27 12:45
  */
 @Data
-public class PageDTO {
+public class PageDTO implements Serializable {
     private List rows; //当前页数据
     private Integer page;//当前页
     private Integer totalPage; //总页数

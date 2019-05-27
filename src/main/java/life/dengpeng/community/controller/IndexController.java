@@ -33,19 +33,7 @@ public class IndexController {
     public String index(HttpServletRequest httpServletRequest,Model model,
                         @RequestParam(name = "page",defaultValue = "1")Integer page,
                         @RequestParam(name = "size",defaultValue = "3")Integer size){
-        Cookie[] cookies = httpServletRequest.getCookies();
-        if(cookies != null && cookies.length>=0) {
-            for (Cookie cookie : cookies) {
-                if ("token".equals(cookie.getName())) {
-                    String token = cookie.getValue();
-                    TbUser tbUser = userMapper.findUserByToken(token);
-                    if (tbUser != null) {
-                        httpServletRequest.getSession().setAttribute("user", tbUser);
-                        break;
-                    }
-                }
-            }
-        }
+
         PageDTO pageDTO = tbQuestionService.findQuestionPage(page, size);
         model.addAttribute("pageDTO",pageDTO);
 

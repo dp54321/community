@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.io.Serializable;
+
 /**
  * @author dp
  * @create 2019-05-24 14:36
@@ -13,7 +15,7 @@ import org.apache.ibatis.annotations.Mapper;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TbQuestion {
+public class TbQuestion implements Serializable {
   private Long id;
   private String title;
   private String description;

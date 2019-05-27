@@ -2,12 +2,14 @@ package life.dengpeng.community.model;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * @author dp
  * @create 2019-05-22 13:34
  */
 @Data
-public class TbUser {
+public class TbUser implements Serializable {
     private Long uid;
     private String accountId;
     private String uname;

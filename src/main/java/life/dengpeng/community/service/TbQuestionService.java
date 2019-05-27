@@ -25,22 +25,17 @@ public class TbQuestionService {
     @Autowired
     private UserMapper userMapper;
 
+    //查询全部记录
     public PageDTO findQuestionPage(Integer page, Integer size){
         PageDTO pageDTO = new PageDTO();
         Integer total = tbQuestionMapper.findQuestionCount(); //总记录
-        setPageDTO(pageDTO,total,page,size);
-        ArrayList<QuestionDTO> list = new ArrayList<>();
-        List<TbQuestion> questionList = tbQuestionMapper.findQuestionAll((pageDTO.getPage()-1)*size,size);
-        if(questionList != null && questionList.size()>0){
-            for (TbQuestion tbQuestion : questionList) {
-                QuestionDTO questionDTO = new QuestionDTO();
-                TbUser user = userMapper.findUserByid(tbQuestion.getCreator());
-                BeanUtils.copyProperties(tbQuestion,questionDTO);
-                questionDTO.setTbUser(user);
-                list.add(questionDTO);
-            }
+        if(total != null && total >0) {
+            setPageDTO(pageDTO, total, page, size);
+            ArrayList<QuestionDTO> list = new ArrayList<>();
+            List<TbQuestion> questionList = tbQuestionMapper.findQuestionAll((pageDTO.getPage() - 1) * size, size);
+            questionToDTO(list, questionList);
+            pageDTO.setRows(list);
         }
-        pageDTO.setRows(list);
         return pageDTO;
     }
 
@@ -95,11 +90,38 @@ public class TbQuestionService {
         if(page<pageDTO.getTotalPage()){  //是否显示下一页
             pageDTO.setNextPage(true);
         }
-        System.out.println(pageDTO.getPages().size());
         return pageDTO;
 
     }
 
+
+
+    //根据用户查询自己的所有记录
+    public PageDTO findQuestionByUserId(Long userId,Integer page, Integer size){
+        PageDTO pageDTO = new PageDTO();
+        Integer total = tbQuestionMapper.findQuestionCountByUserId(userId); //个人总记录
+        if(total != null && total >0) {
+            setPageDTO(pageDTO, total, page, size);
+            ArrayList<QuestionDTO> list = new ArrayList<>();
+            List<TbQuestion> questionList = tbQuestionMapper.findQuestionByUserId(userId,(pageDTO.getPage() - 1) * size, size);
+            questionToDTO(list, questionList);
+            pageDTO.setRows(list);
+        }
+        return pageDTO;
+    }
+
+    //将类转换成DTO
+    public void questionToDTO(ArrayList<QuestionDTO> list, List<TbQuestion> questionList) {
+        if(questionList != null && questionList.size()>0){
+            for (TbQuestion tbQuestion : questionList) {
+                QuestionDTO questionDTO = new QuestionDTO();
+                TbUser user = userMapper.findUserByid(tbQuestion.getCreator());
+                BeanUtils.copyProperties(tbQuestion,questionDTO);
+                questionDTO.setTbUser(user);
+                list.add(questionDTO);
+            }
+        }
+    }
 
 
 }

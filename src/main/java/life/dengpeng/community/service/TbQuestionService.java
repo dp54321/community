@@ -3,9 +3,13 @@ package life.dengpeng.community.service;
 import life.dengpeng.community.dto.PageDTO;
 import life.dengpeng.community.dto.QuestionDTO;
 import life.dengpeng.community.mapper.TbQuestionMapper;
-import life.dengpeng.community.mapper.UserMapper;
+import life.dengpeng.community.mapper.TbUserMapper;
+
 import life.dengpeng.community.model.TbQuestion;
+import life.dengpeng.community.model.TbQuestionExample;
 import life.dengpeng.community.model.TbUser;
+import life.dengpeng.community.model.TbUserExample;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,25 +27,43 @@ public class TbQuestionService {
     private TbQuestionMapper tbQuestionMapper;
 
     @Autowired
-    private UserMapper userMapper;
+    private TbUserMapper tbUserMapper;
 
     //查询全部记录
     public PageDTO findQuestionPage(Integer page, Integer size){
         PageDTO pageDTO = new PageDTO();
-        Integer total = tbQuestionMapper.findQuestionCount(); //总记录
+        Integer total = (int) tbQuestionMapper.countByExample(new TbQuestionExample());
         if(total != null && total >0) {
             setPageDTO(pageDTO, total, page, size);
             ArrayList<QuestionDTO> list = new ArrayList<>();
-            List<TbQuestion> questionList = tbQuestionMapper.findQuestionAll((pageDTO.getPage() - 1) * size, size);
-            questionToDTO(list, questionList);
+            int offset = (page - 1) * size;
+            List<TbQuestion> tbQuestions = tbQuestionMapper.selectByExampleWithRowbounds(new TbQuestionExample(),new RowBounds(offset,size));
+            questionToDTO(list, tbQuestions);
             pageDTO.setRows(list);
         }
         return pageDTO;
     }
 
+    //根据用户查询自己的所有记录
+    public PageDTO findQuestionByUserId(Long userId,Integer page, Integer size){
+        PageDTO pageDTO = new PageDTO();
+        TbQuestionExample example = new TbQuestionExample();
+        example.createCriteria().andCreatorEqualTo(userId);
+        Integer total = (int)tbQuestionMapper.countByExample(example);//个人总记录
+        if(total != null && total >0) {
+            setPageDTO(pageDTO, total, page, size);
+            ArrayList<QuestionDTO> list = new ArrayList<>();
+            TbQuestionExample example1 = new TbQuestionExample();
+            example1.createCriteria().andCreatorEqualTo(userId);
+            int offset = (pageDTO.getPage() - 1) * size;
+            List<TbQuestion> tbQuestions = tbQuestionMapper.selectByExampleWithRowbounds(example1, new RowBounds(offset, size));
+            questionToDTO(list, tbQuestions);
+            pageDTO.setRows(list);
+        }
+        return pageDTO;
+    }
 
-
-    //赋值PageDTO
+    //赋值PageDTO 分页
     public PageDTO setPageDTO(PageDTO pageDTO,Integer total,Integer page,Integer size) {
 
 
@@ -60,7 +82,7 @@ public class TbQuestionService {
         }
         pageDTO.setPage(page);  //当前页
         List<Integer> pages = new ArrayList<>();
-       pages.add(page);
+        pages.add(page);
         for(int i=1;i<=2;i++){
             if(page-i>0){   //向前追加两个页码
                 pages.add(0,page-i);
@@ -94,34 +116,49 @@ public class TbQuestionService {
 
     }
 
-
-
-    //根据用户查询自己的所有记录
-    public PageDTO findQuestionByUserId(Long userId,Integer page, Integer size){
-        PageDTO pageDTO = new PageDTO();
-        Integer total = tbQuestionMapper.findQuestionCountByUserId(userId); //个人总记录
-        if(total != null && total >0) {
-            setPageDTO(pageDTO, total, page, size);
-            ArrayList<QuestionDTO> list = new ArrayList<>();
-            List<TbQuestion> questionList = tbQuestionMapper.findQuestionByUserId(userId,(pageDTO.getPage() - 1) * size, size);
-            questionToDTO(list, questionList);
-            pageDTO.setRows(list);
-        }
-        return pageDTO;
-    }
-
     //将类转换成DTO
     public void questionToDTO(ArrayList<QuestionDTO> list, List<TbQuestion> questionList) {
         if(questionList != null && questionList.size()>0){
             for (TbQuestion tbQuestion : questionList) {
                 QuestionDTO questionDTO = new QuestionDTO();
-                TbUser user = userMapper.findUserByid(tbQuestion.getCreator());
+
+                TbUserExample example = new TbUserExample();
+                example.createCriteria().andUidEqualTo(tbQuestion.getCreator());
+                TbUser tbUser = tbUserMapper.selectByPrimaryKey(tbQuestion.getCreator());
                 BeanUtils.copyProperties(tbQuestion,questionDTO);
-                questionDTO.setTbUser(user);
+                questionDTO.setTbUser(tbUser);
                 list.add(questionDTO);
             }
         }
     }
 
 
+    public void saveOrUpdate(TbQuestion tbQuestion) {
+
+        if(tbQuestion.getId() != null && tbQuestion.getId()>0){
+            TbQuestion question = new TbQuestion();
+            question.setId(tbQuestion.getId());
+            question.setTitle(tbQuestion.getTitle());
+            question.setDescription(tbQuestion.getDescription());
+            question.setTag(tbQuestion.getTag());
+            question.setGmtModifled(System.currentTimeMillis());
+            tbQuestionMapper.updateByPrimaryKeySelective(question);
+        }else {
+            tbQuestionMapper.insert(tbQuestion);
+        }
+
+    }
+
+
+    public QuestionDTO findQuestionById(Long id) {
+
+        TbQuestion question = tbQuestionMapper.selectByPrimaryKey(id);
+        TbUser tbUser = tbUserMapper.selectByPrimaryKey(question.getCreator());
+        QuestionDTO questionDTO = new QuestionDTO();
+        questionDTO.setTbUser(tbUser);
+        BeanUtils.copyProperties(question,questionDTO);
+
+        return questionDTO;
+
+    }
 }

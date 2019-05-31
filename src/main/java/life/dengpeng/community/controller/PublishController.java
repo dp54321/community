@@ -1,11 +1,15 @@
 package life.dengpeng.community.controller;
 
+import life.dengpeng.community.dto.QuestionDTO;
 import life.dengpeng.community.mapper.TbQuestionMapper;
 import life.dengpeng.community.model.TbQuestion;
 import life.dengpeng.community.model.TbUser;
+import life.dengpeng.community.service.TbQuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -19,10 +23,24 @@ import javax.servlet.http.HttpServletRequest;
 public class PublishController {
 
     @Autowired
-    private TbQuestionMapper tbQuestioniMapper;
+    private TbQuestionService tbQuestionService;
+
+    @Autowired
+    private TbQuestionMapper tbQuestionMapper;
+
+    @GetMapping("/publish/{id}")
+    public String edit(@PathVariable("id")Long id,Model model){
+
+        TbQuestion question = tbQuestionMapper.selectByPrimaryKey(id);
+        model.addAttribute("question",question);
+
+        return "publish";
+
+    }
 
     @RequestMapping("/publish")
-    public String showPublish(){
+    public String showPublish(Model model){
+        model.addAttribute("question",new QuestionDTO());
         return "publish";
     }
 
@@ -31,6 +49,7 @@ public class PublishController {
         model.addAttribute("title",tbQuestion.getTitle());
         model.addAttribute("description",tbQuestion.getDescription());
         model.addAttribute("tag",tbQuestion.getTag());
+        model.addAttribute("question",tbQuestion);
         if(tbQuestion.getTitle() == null || tbQuestion.getTitle().equals("")){
             model.addAttribute("error","标题不能为空");
             return "publish";
@@ -53,7 +72,7 @@ public class PublishController {
         tbQuestion.setCommentCount(0);
         tbQuestion.setLikeCount(0);
         tbQuestion.setViewCount(0);
-        tbQuestioniMapper.insertPublish(tbQuestion);
+        tbQuestionService.saveOrUpdate(tbQuestion);
         return "redirect:/";
     }
 

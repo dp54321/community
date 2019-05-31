@@ -18,14 +18,14 @@
         <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
             <h2 class="glyphicon glyphicon-th-list" aria-hidden="true">发现</h2>
             <hr>
-            <div class="media" th:each="question : ${pageDTO.rows}">
+            <div class="media"  th:each="question : ${pageDTO.rows}">
                 <div class="media-left">
-                    <a href="#">
-                        <img class="img-circle" th:src="${question.tbUser.avatarUrl}"  style="width: 42px;height: 42px">
-                    </a>
-                </div>
+                <a href="#">
+                    <img class="img-circle" th:src="${question.tbUser.avatarUrl}"  style="width: 42px;height: 42px">
+                </a>
+            </div>
                 <div class="media-body">
-                    <h4 class="media-heading" th:text="${question.title}"></h4>
+                    <a th:href="@{'/question/'+${question.id}}"><h4 class="media-heading" th:text="${question.title}"></h4></a>
                     <span th:text="${question.tag}"></span>
                     <span class="text-desc"><span th:text="${question.commentCount}"></span>个评论 •
                         <span th:text="${question.viewCount}"></span>次浏览 •

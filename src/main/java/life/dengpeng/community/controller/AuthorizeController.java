@@ -2,9 +2,9 @@ package life.dengpeng.community.controller;
 
 import life.dengpeng.community.dto.AccessTokenDTO;
 import life.dengpeng.community.dto.GithubUser;
-import life.dengpeng.community.mapper.UserMapper;
 import life.dengpeng.community.model.TbUser;
 import life.dengpeng.community.provider.GithubProvider;
+import life.dengpeng.community.service.TbUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
@@ -32,7 +31,7 @@ public class AuthorizeController {
     @Value("${github.redirectUri}")
     private String redirectURI;
     @Autowired
-    private UserMapper userMapper;
+    private TbUserService tbUserService;
 
     @GetMapping("/callback")
     public String callback(@RequestParam(name = "code") String code,
@@ -56,10 +55,9 @@ public class AuthorizeController {
             String token = UUID.randomUUID().toString();
             tbUser.setToken(token);
             tbUser.setGmtCreate(System.currentTimeMillis());
-            tbUser.setGmtModiflde(tbUser.getGmtCreate());
             tbUser.setAvatarUrl(githubUser.getAvatarUrl());
             //将用户信息写入数据库
-            userMapper.insertUser(tbUser);
+            tbUserService.saveOrUpdate(tbUser);
             // 把token写入cookie 用于登录认证
             Cookie cookie = new Cookie("token",token);
             httpServletResponse.addCookie(cookie);

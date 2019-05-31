@@ -1,41 +1,41 @@
 package life.dengpeng.community.mapper;
 
-import life.dengpeng.community.model.TbQuestion;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-
 import java.util.List;
+import life.dengpeng.community.model.TbQuestion;
+import life.dengpeng.community.model.TbQuestionExample;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.session.RowBounds;
 
-/**
- * @author dp
- * @create 2019-05-24 14:41
- */
-@Mapper
 public interface TbQuestionMapper {
+    long countByExample(TbQuestionExample example);
 
-    @Insert("insert into tb_question (title,description,gmt_create,gmt_modifled,creator,comment_count,view_count,like_count,tag)" +
-            "values(#{title},#{description},#{gmtCreate},#{gmtModifled},#{creator},#{commentCount},#{viewCount},#{likeCount},#{tag})")
-    void insertPublish(TbQuestion tbPublish);
+    int deleteByExample(TbQuestionExample example);
 
-    @Select("select id,title,description,gmt_create,gmt_modifled,creator,comment_count,view_count,like_count,tag from tb_question " +
-            "limit #{page},#{size} ")
-    List<TbQuestion> findQuestionAll(@Param(value = "page") Integer page, @Param(value = "size") Integer size);
+    int deleteByPrimaryKey(Long id);
 
+    int insert(TbQuestion record);
 
-    @Select("select count(1) from tb_question")
-    Integer findQuestionCount();
+    int insertSelective(TbQuestion record);
 
-    @Select("select id,title,description,gmt_create,gmt_modifled,creator,comment_count,view_count,like_count,tag from tb_question " +
-            "where creator = #{creator} limit #{page},#{size} ")
-    List<TbQuestion> findQuestionByUserId(@Param(value = "creator")Long creator,
-                                          @Param(value = "page") Integer page,
-                                          @Param(value = "size") Integer size);
+    List<TbQuestion> selectByExampleWithBLOBsWithRowbounds(TbQuestionExample example, RowBounds rowBounds);
 
-    @Select("select count(1) from tb_question where creator = #{creator}")
-    Integer findQuestionCountByUserId(@Param(value = "creator")Long creator);
+    List<TbQuestion> selectByExampleWithBLOBs(TbQuestionExample example);
 
+    List<TbQuestion> selectByExampleWithRowbounds(TbQuestionExample example, RowBounds rowBounds);
 
+    List<TbQuestion> selectByExample(TbQuestionExample example);
 
+    TbQuestion selectByPrimaryKey(Long id);
+
+    int updateByExampleSelective(@Param("record") TbQuestion record, @Param("example") TbQuestionExample example);
+
+    int updateByExampleWithBLOBs(@Param("record") TbQuestion record, @Param("example") TbQuestionExample example);
+
+    int updateByExample(@Param("record") TbQuestion record, @Param("example") TbQuestionExample example);
+
+    int updateByPrimaryKeySelective(TbQuestion record);
+
+    int updateByPrimaryKeyWithBLOBs(TbQuestion record);
+
+    int updateByPrimaryKey(TbQuestion record);
 }

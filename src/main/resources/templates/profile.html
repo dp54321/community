@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title th:text="${sectionName}"></title>
@@ -25,7 +25,7 @@
                     </a>
                 </div>
                 <div class="media-body">
-                    <h4 class="media-heading" th:text="${question.title}"></h4>
+                    <a th:href="@{'/question/'+${question.id}}"> <h4 class="media-heading" th:text="${question.title}"></h4></a>
                     <span th:text="${question.tag}"></span>
                     <span class="text-desc"><span th:text="${question.commentCount}"></span>个评论 •
                         <span th:text="${question.viewCount}"></span>次浏览 •

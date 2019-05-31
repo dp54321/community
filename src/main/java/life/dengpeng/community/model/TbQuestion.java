@@ -1,31 +1,103 @@
 package life.dengpeng.community.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.apache.ibatis.annotations.Mapper;
+public class TbQuestion {
+    private Long id;
 
-import java.io.Serializable;
+    private String title;
 
-/**
- * @author dp
- * @create 2019-05-24 14:36
- */
+    private Long gmtCreate;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class TbQuestion implements Serializable {
-  private Long id;
-  private String title;
-  private String description;
-  private Long gmtCreate;
-  private Long gmtModifled;
-  private Long creator;  //发表人
-  private Integer commentCount; //'评论数',
-  private Integer viewCount;//浏览数',
-  private Integer likeCount; //点赞数',
-  private String tag;
+    private Long gmtModifled;
 
+    private Long creator;
 
+    private Integer commentCount;
+
+    private Integer viewCount;
+
+    private Integer likeCount;
+
+    private String tag;
+
+    private String description;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title == null ? null : title.trim();
+    }
+
+    public Long getGmtCreate() {
+        return gmtCreate;
+    }
+
+    public void setGmtCreate(Long gmtCreate) {
+        this.gmtCreate = gmtCreate;
+    }
+
+    public Long getGmtModifled() {
+        return gmtModifled;
+    }
+
+    public void setGmtModifled(Long gmtModifled) {
+        this.gmtModifled = gmtModifled;
+    }
+
+    public Long getCreator() {
+        return creator;
+    }
+
+    public void setCreator(Long creator) {
+        this.creator = creator;
+    }
+
+    public Integer getCommentCount() {
+        return commentCount;
+    }
+
+    public void setCommentCount(Integer commentCount) {
+        this.commentCount = commentCount;
+    }
+
+    public Integer getViewCount() {
+        return viewCount;
+    }
+
+    public void setViewCount(Integer viewCount) {
+        this.viewCount = viewCount;
+    }
+
+    public Integer getLikeCount() {
+        return likeCount;
+    }
+
+    public void setLikeCount(Integer likeCount) {
+        this.likeCount = likeCount;
+    }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag == null ? null : tag.trim();
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description == null ? null : description.trim();
+    }
 }

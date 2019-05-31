@@ -1,7 +1,8 @@
 package life.dengpeng.community.interceptor;
 
-import life.dengpeng.community.mapper.UserMapper;
+import life.dengpeng.community.mapper.TbUserMapper;
 import life.dengpeng.community.model.TbUser;
+import life.dengpeng.community.model.TbUserExample;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -10,6 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * @author dp
@@ -19,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 public class SessionInterceptor implements HandlerInterceptor {
 
     @Autowired
-    private UserMapper userMapper;
+    private TbUserMapper tbUserMapper;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -28,9 +30,11 @@ public class SessionInterceptor implements HandlerInterceptor {
             for (Cookie cookie : cookies) {
                 if ("token".equals(cookie.getName())) {
                     String token = cookie.getValue();
-                    TbUser tbUser = userMapper.findUserByToken(token);
-                    if (tbUser != null) {
-                        request.getSession().setAttribute("user", tbUser);
+                    TbUserExample example = new TbUserExample();
+                    example.createCriteria().andTokenEqualTo(token);
+                    List<TbUser> tbUsers = tbUserMapper.selectByExample(example);
+                    if (tbUsers != null && tbUsers.size()>0) {
+                        request.getSession().setAttribute("user", tbUsers.get(0));
                         break;
                     }
                 }

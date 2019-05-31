@@ -19,6 +19,10 @@ public class TbUserService {
     private TbUserMapper tbUserMapper;
 
 
+    /**
+     * 增加和修改用户信息
+     * @param tbUser
+     */
     public void saveOrUpdate(TbUser tbUser) {
 
         TbUserExample example = new TbUserExample();

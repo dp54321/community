@@ -132,7 +132,10 @@ public class TbQuestionService {
         }
     }
 
-
+    /**
+     * 增加和修改问题
+     * @param tbQuestion
+     */
     public void saveOrUpdate(TbQuestion tbQuestion) {
 
         if(tbQuestion.getId() != null && tbQuestion.getId()>0){
@@ -150,6 +153,11 @@ public class TbQuestionService {
     }
 
 
+    /**
+     * 查询问题数据
+     * @param id
+     * @return
+     */
     public QuestionDTO findQuestionById(Long id) {
 
         TbQuestion question = tbQuestionMapper.selectByPrimaryKey(id);

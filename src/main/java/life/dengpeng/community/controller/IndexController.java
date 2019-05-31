@@ -21,6 +21,14 @@ public class IndexController {
     @Autowired
     private TbQuestionService tbQuestionService;
 
+    /**
+     * 首页分页加载问题列表
+     * @param httpServletRequest
+     * @param model
+     * @param page
+     * @param size
+     * @return
+     */
     @GetMapping("/")
     public String index(HttpServletRequest httpServletRequest,Model model,
                         @RequestParam(name = "page",defaultValue = "1")Integer page,

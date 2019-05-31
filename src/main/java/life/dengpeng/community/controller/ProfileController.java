@@ -23,6 +23,15 @@ public class ProfileController {
     private TbQuestionService tbQuestionService;
 
 
+    /**
+     * 个人详情页面
+     * @param action
+     * @param page
+     * @param size
+     * @param httpServletRequest
+     * @param model
+     * @return
+     */
     @GetMapping("/profile/{action}")
     public String findQuestionByUserId(@PathVariable(name = "action") String action,
                                        @RequestParam(name = "page",defaultValue = "1")Integer page,

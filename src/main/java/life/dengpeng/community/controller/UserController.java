@@ -16,6 +16,12 @@ import javax.servlet.http.HttpServletResponse;
 public class UserController {
 
 
+    /**
+     * 退出登录
+     * @param request
+     * @param response
+     * @return
+     */
     @GetMapping("/user/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response){
         request.getSession().removeAttribute("user");

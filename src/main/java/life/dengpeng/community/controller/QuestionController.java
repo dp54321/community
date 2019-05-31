@@ -20,6 +20,12 @@ public class QuestionController {
     @Autowired
     private TbQuestionService tbQuestionService;
 
+    /**
+     * 问题详情数据
+     * @param id
+     * @param model
+     * @return
+     */
     @GetMapping("/question/{id}")
     public String question(@PathVariable(name = "id") Long id,Model model){
 

@@ -6,6 +6,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
+ * 问题参数
  * @author dp
  * @create 2019-05-24 18:44
  */

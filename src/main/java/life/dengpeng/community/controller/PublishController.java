@@ -28,6 +28,12 @@ public class PublishController {
     @Autowired
     private TbQuestionMapper tbQuestionMapper;
 
+    /**
+     * 修改问题页面
+     * @param id
+     * @param model
+     * @return
+     */
     @GetMapping("/publish/{id}")
     public String edit(@PathVariable("id")Long id,Model model){
 
@@ -38,12 +44,24 @@ public class PublishController {
 
     }
 
+    /**
+     * 发布页面
+     * @param model
+     * @return
+     */
     @RequestMapping("/publish")
     public String showPublish(Model model){
         model.addAttribute("question",new QuestionDTO());
         return "publish";
     }
 
+    /**
+     * 添加发布问题和修改发布问题
+     * @param tbQuestion
+     * @param model
+     * @param request
+     * @return
+     */
     @PostMapping("/publish")
     public String doPublish(TbQuestion tbQuestion, Model model, HttpServletRequest request){
         model.addAttribute("title",tbQuestion.getTitle());

@@ -8,10 +8,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/**
- * @author dp
- * @create 2019-05-31 12:40
- */
+
 @Controller
 public class UserController {
 

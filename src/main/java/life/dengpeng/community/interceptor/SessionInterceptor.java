@@ -13,10 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
-/**
- * @author dp
- * @create 2019-05-27 20:32
- */
+
 @Service
 public class SessionInterceptor implements HandlerInterceptor {
 

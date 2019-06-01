@@ -2,6 +2,9 @@ package life.dengpeng.community.service;
 
 import life.dengpeng.community.dto.PageDTO;
 import life.dengpeng.community.dto.QuestionDTO;
+import life.dengpeng.community.enums.BJEnum;
+import life.dengpeng.community.enums.IBJEnum;
+import life.dengpeng.community.exception.BJException;
 import life.dengpeng.community.mapper.TbQuestionMapper;
 import life.dengpeng.community.mapper.TbUserMapper;
 
@@ -17,10 +20,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author dp
- * @create 2019-05-24 18:47
- */
 @Service
 public class TbQuestionService {
     @Autowired
@@ -145,7 +144,10 @@ public class TbQuestionService {
             question.setDescription(tbQuestion.getDescription());
             question.setTag(tbQuestion.getTag());
             question.setGmtModifled(System.currentTimeMillis());
-            tbQuestionMapper.updateByPrimaryKeySelective(question);
+            int i = tbQuestionMapper.updateByPrimaryKeySelective(question);
+            if(i != 1){
+                throw new BJException(BJEnum.QUESTION_ERROR);
+            }
         }else {
             tbQuestionMapper.insert(tbQuestion);
         }
@@ -161,6 +163,9 @@ public class TbQuestionService {
     public QuestionDTO findQuestionById(Long id) {
 
         TbQuestion question = tbQuestionMapper.selectByPrimaryKey(id);
+        if(question == null){
+            throw new BJException(BJEnum.QUESTION_ERROR);
+        }
         TbUser tbUser = tbUserMapper.selectByPrimaryKey(question.getCreator());
         QuestionDTO questionDTO = new QuestionDTO();
         questionDTO.setTbUser(tbUser);

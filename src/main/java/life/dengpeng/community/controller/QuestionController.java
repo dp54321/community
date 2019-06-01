@@ -10,10 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-/**
- * @author dp
- * @create 2019-05-31 13:47
- */
+
 @Controller
 public class QuestionController {
 

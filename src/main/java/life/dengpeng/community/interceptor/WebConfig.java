@@ -6,10 +6,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-/**
- * @author dp
- * @create 2019-05-27 20:31
- */
+
 @Configuration
 //@EnableWebMvc  影响静态资源文件的加载
 public class WebConfig implements WebMvcConfigurer {

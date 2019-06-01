@@ -15,10 +15,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
-/**
- * @author dp
- * @create 2019-05-21 10:45
- */
+
 @Controller
 public class AuthorizeController {
 

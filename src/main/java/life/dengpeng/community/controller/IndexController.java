@@ -10,10 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 
-/**
- * @author dp
- * @create 2019-05-18 21:54
- */
+
 @Controller
 public class IndexController {
 

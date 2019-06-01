@@ -15,10 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 
-/**
- * @author dp
- * @create 2019-05-24 13:55
- */
+
 @Controller
 public class PublishController {
 

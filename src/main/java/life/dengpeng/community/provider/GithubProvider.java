@@ -8,10 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
-/**
- * @author dp
- * @create 2019-05-21 10:51
- */
+
 @Component
 public class GithubProvider {
 

@@ -6,10 +6,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author dp
- * @create 2019-05-27 12:45
- */
+
 @Data
 public class PageDTO implements Serializable {
     private List rows; //当前页数据

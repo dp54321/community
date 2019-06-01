@@ -5,8 +5,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /** github登录 响应参数
- * @author dp
- * @create 2019-05-21 10:53
+
  */
 
 

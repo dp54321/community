@@ -13,7 +13,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Collections;
 import java.util.Map;
 
-
+/**
+ * 请求异常处理
+ */
 @Controller
 @RequestMapping({"${server.error.path:${error.path:/error}}"})
 public class BJErrorController implements ErrorController {

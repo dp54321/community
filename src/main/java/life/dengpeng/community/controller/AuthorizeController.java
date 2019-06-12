@@ -33,7 +33,8 @@ public class AuthorizeController {
     @GetMapping("/callback")
     public String callback(@RequestParam(name = "code") String code,
                             @RequestParam(name = "state") String state,
-                           HttpServletResponse httpServletResponse
+                           HttpServletResponse httpServletResponse,
+                           @RequestParam(value="redirect_url",required = false) String redirect_url
                             ) {
         AccessTokenDTO accessTokenDTO = new AccessTokenDTO();
         accessTokenDTO.setClient_id(clientID);
@@ -58,6 +59,9 @@ public class AuthorizeController {
             // 把token写入cookie 用于登录认证
             Cookie cookie = new Cookie("token",token);
             httpServletResponse.addCookie(cookie);
+            if(redirect_url != null ){
+                return "forward:"+redirect_url;
+            }
             return "redirect:/";
         } else {
             //登录失败

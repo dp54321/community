@@ -1,0 +1,18 @@
+.menu{
+    color: #999;
+    margin-top: 5px;
+}
+.menu .icon{
+    margin-right: 6px;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.menu .active{
+    color: #499ef3;
+}
+
+.menu .icon:hover{
+    color: #499ef3;
+}
+

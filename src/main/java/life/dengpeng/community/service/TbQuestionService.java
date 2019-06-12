@@ -3,11 +3,12 @@ package life.dengpeng.community.service;
 import life.dengpeng.community.dto.PageDTO;
 import life.dengpeng.community.dto.QuestionDTO;
 import life.dengpeng.community.enums.BJEnum;
-import life.dengpeng.community.enums.IBJEnum;
 import life.dengpeng.community.exception.BJException;
+import life.dengpeng.community.mapper.TbCommentMapper;
+import life.dengpeng.community.mapper.TbQuestionExtMapper;
+
 import life.dengpeng.community.mapper.TbQuestionMapper;
 import life.dengpeng.community.mapper.TbUserMapper;
-
 import life.dengpeng.community.model.TbQuestion;
 import life.dengpeng.community.model.TbQuestionExample;
 import life.dengpeng.community.model.TbUser;
@@ -28,6 +29,12 @@ public class TbQuestionService {
     @Autowired
     private TbUserMapper tbUserMapper;
 
+    @Autowired
+    private TbQuestionExtMapper tbQuestionExtMapper;
+
+    @Autowired
+    private TbCommentMapper tbCommentMapper;
+
     //查询全部记录
     public PageDTO findQuestionPage(Integer page, Integer size){
         PageDTO pageDTO = new PageDTO();
@@ -36,7 +43,9 @@ public class TbQuestionService {
             setPageDTO(pageDTO, total, page, size);
             ArrayList<QuestionDTO> list = new ArrayList<>();
             int offset = (page - 1) * size;
-            List<TbQuestion> tbQuestions = tbQuestionMapper.selectByExampleWithRowbounds(new TbQuestionExample(),new RowBounds(offset,size));
+            TbQuestionExample example = new TbQuestionExample();
+            example.setOrderByClause("gmt_create desc");
+            List<TbQuestion> tbQuestions = tbQuestionMapper.selectByExampleWithRowbounds(example,new RowBounds(offset,size));
             questionToDTO(list, tbQuestions);
             pageDTO.setRows(list);
         }
@@ -54,6 +63,7 @@ public class TbQuestionService {
             ArrayList<QuestionDTO> list = new ArrayList<>();
             TbQuestionExample example1 = new TbQuestionExample();
             example1.createCriteria().andCreatorEqualTo(userId);
+            example1.setOrderByClause("gmt_create desc");
             int offset = (pageDTO.getPage() - 1) * size;
             List<TbQuestion> tbQuestions = tbQuestionMapper.selectByExampleWithRowbounds(example1, new RowBounds(offset, size));
             questionToDTO(list, tbQuestions);
@@ -146,7 +156,7 @@ public class TbQuestionService {
             question.setGmtModifled(System.currentTimeMillis());
             int i = tbQuestionMapper.updateByPrimaryKeySelective(question);
             if(i != 1){
-                throw new BJException(BJEnum.QUESTION_ERROR);
+                throw new BJException(BJEnum.QUESTION_NOT_FOUND);
             }
         }else {
             tbQuestionMapper.insert(tbQuestion);
@@ -164,7 +174,7 @@ public class TbQuestionService {
 
         TbQuestion question = tbQuestionMapper.selectByPrimaryKey(id);
         if(question == null){
-            throw new BJException(BJEnum.QUESTION_ERROR);
+            throw new BJException(BJEnum.QUESTION_NOT_FOUND);
         }
         TbUser tbUser = tbUserMapper.selectByPrimaryKey(question.getCreator());
         QuestionDTO questionDTO = new QuestionDTO();
@@ -174,4 +184,15 @@ public class TbQuestionService {
         return questionDTO;
 
     }
+
+    //增加阅读数
+    public void incView(Long id) {
+
+        TbQuestion updateQuestion = new TbQuestion();
+        updateQuestion.setId(id);
+        updateQuestion.setViewCount(1);
+        tbQuestionExtMapper.incView(updateQuestion);
+    }
+
+
 }

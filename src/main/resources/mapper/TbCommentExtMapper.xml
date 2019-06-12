@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="life.dengpeng.community.mapper.TbCommentExtMapper">
+  <resultMap id="BaseResultMap" type="life.dengpeng.community.model.TbComment">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="commentator" jdbcType="BIGINT" property="commentator" />
+    <result column="gmt_create" jdbcType="BIGINT" property="gmtCreate" />
+    <result column="gmt_modifled" jdbcType="BIGINT" property="gmtModifled" />
+    <result column="like_count" jdbcType="BIGINT" property="likeCount" />
+    <result column="comment_count" jdbcType="BIGINT" property="commentCount" />
+  </resultMap>
+  <update id="incComment" parameterType="life.dengpeng.community.model.TbComment">
+    update tb_comment
+    set
+    comment_count = comment_count + #{commentCount,jdbcType=BIGINT}
+    where id = #{id}
+  </update>
+</mapper>

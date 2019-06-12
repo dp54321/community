@@ -5,4 +5,6 @@ public interface IBJEnum {
 
     String getMessage();
 
+    Integer getCode();
+
 }

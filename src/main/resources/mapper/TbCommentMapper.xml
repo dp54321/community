@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="life.dengpeng.community.mapper.TbCommentMapper">
+  <resultMap id="BaseResultMap" type="life.dengpeng.community.model.TbComment">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="commentator" jdbcType="BIGINT" property="commentator" />
+    <result column="gmt_create" jdbcType="BIGINT" property="gmtCreate" />
+    <result column="gmt_modifled" jdbcType="BIGINT" property="gmtModifled" />
+    <result column="like_count" jdbcType="BIGINT" property="likeCount" />
+    <result column="comment_count" jdbcType="BIGINT" property="commentCount" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, parent_id, type, content, commentator, gmt_create, gmt_modifled, like_count, 
+    comment_count
+  </sql>
+  <select id="selectByExample" parameterType="life.dengpeng.community.model.TbCommentExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from tb_comment
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_comment
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from tb_comment
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="life.dengpeng.community.model.TbCommentExample">
+    delete from tb_comment
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="life.dengpeng.community.model.TbComment">
+    insert into tb_comment (id, parent_id, type, 
+      content, commentator, gmt_create, 
+      gmt_modifled, like_count, comment_count
+      )
+    values (#{id,jdbcType=BIGINT}, #{parentId,jdbcType=BIGINT}, #{type,jdbcType=INTEGER}, 
+      #{content,jdbcType=VARCHAR}, #{commentator,jdbcType=BIGINT}, #{gmtCreate,jdbcType=BIGINT}, 
+      #{gmtModifled,jdbcType=BIGINT}, #{likeCount,jdbcType=BIGINT}, #{commentCount,jdbcType=BIGINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="life.dengpeng.community.model.TbComment">
+    insert into tb_comment
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="parentId != null">
+        parent_id,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+      <if test="commentator != null">
+        commentator,
+      </if>
+      <if test="gmtCreate != null">
+        gmt_create,
+      </if>
+      <if test="gmtModifled != null">
+        gmt_modifled,
+      </if>
+      <if test="likeCount != null">
+        like_count,
+      </if>
+      <if test="commentCount != null">
+        comment_count,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="parentId != null">
+        #{parentId,jdbcType=BIGINT},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="commentator != null">
+        #{commentator,jdbcType=BIGINT},
+      </if>
+      <if test="gmtCreate != null">
+        #{gmtCreate,jdbcType=BIGINT},
+      </if>
+      <if test="gmtModifled != null">
+        #{gmtModifled,jdbcType=BIGINT},
+      </if>
+      <if test="likeCount != null">
+        #{likeCount,jdbcType=BIGINT},
+      </if>
+      <if test="commentCount != null">
+        #{commentCount,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="life.dengpeng.community.model.TbCommentExample" resultType="java.lang.Long">
+    select count(*) from tb_comment
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update tb_comment
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.parentId != null">
+        parent_id = #{record.parentId,jdbcType=BIGINT},
+      </if>
+      <if test="record.type != null">
+        type = #{record.type,jdbcType=INTEGER},
+      </if>
+      <if test="record.content != null">
+        content = #{record.content,jdbcType=VARCHAR},
+      </if>
+      <if test="record.commentator != null">
+        commentator = #{record.commentator,jdbcType=BIGINT},
+      </if>
+      <if test="record.gmtCreate != null">
+        gmt_create = #{record.gmtCreate,jdbcType=BIGINT},
+      </if>
+      <if test="record.gmtModifled != null">
+        gmt_modifled = #{record.gmtModifled,jdbcType=BIGINT},
+      </if>
+      <if test="record.likeCount != null">
+        like_count = #{record.likeCount,jdbcType=BIGINT},
+      </if>
+      <if test="record.commentCount != null">
+        comment_count = #{record.commentCount,jdbcType=BIGINT},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update tb_comment
+    set id = #{record.id,jdbcType=BIGINT},
+      parent_id = #{record.parentId,jdbcType=BIGINT},
+      type = #{record.type,jdbcType=INTEGER},
+      content = #{record.content,jdbcType=VARCHAR},
+      commentator = #{record.commentator,jdbcType=BIGINT},
+      gmt_create = #{record.gmtCreate,jdbcType=BIGINT},
+      gmt_modifled = #{record.gmtModifled,jdbcType=BIGINT},
+      like_count = #{record.likeCount,jdbcType=BIGINT},
+      comment_count = #{record.commentCount,jdbcType=BIGINT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="life.dengpeng.community.model.TbComment">
+    update tb_comment
+    <set>
+      <if test="parentId != null">
+        parent_id = #{parentId,jdbcType=BIGINT},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="commentator != null">
+        commentator = #{commentator,jdbcType=BIGINT},
+      </if>
+      <if test="gmtCreate != null">
+        gmt_create = #{gmtCreate,jdbcType=BIGINT},
+      </if>
+      <if test="gmtModifled != null">
+        gmt_modifled = #{gmtModifled,jdbcType=BIGINT},
+      </if>
+      <if test="likeCount != null">
+        like_count = #{likeCount,jdbcType=BIGINT},
+      </if>
+      <if test="commentCount != null">
+        comment_count = #{commentCount,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="life.dengpeng.community.model.TbComment">
+    update tb_comment
+    set parent_id = #{parentId,jdbcType=BIGINT},
+      type = #{type,jdbcType=INTEGER},
+      content = #{content,jdbcType=VARCHAR},
+      commentator = #{commentator,jdbcType=BIGINT},
+      gmt_create = #{gmtCreate,jdbcType=BIGINT},
+      gmt_modifled = #{gmtModifled,jdbcType=BIGINT},
+      like_count = #{likeCount,jdbcType=BIGINT},
+      comment_count = #{commentCount,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByExampleWithRowbounds" parameterType="life.dengpeng.community.model.TbCommentExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from tb_comment
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+</mapper>

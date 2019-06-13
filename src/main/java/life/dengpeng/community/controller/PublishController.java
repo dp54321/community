@@ -1,10 +1,13 @@
 package life.dengpeng.community.controller;
 
 import life.dengpeng.community.dto.QuestionDTO;
+import life.dengpeng.community.dto.TagDTO;
 import life.dengpeng.community.mapper.TbQuestionMapper;
 import life.dengpeng.community.model.TbQuestion;
 import life.dengpeng.community.model.TbUser;
 import life.dengpeng.community.service.TbQuestionService;
+import life.dengpeng.community.service.TbTagService;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 
 @Controller
@@ -25,6 +29,9 @@ public class PublishController {
     @Autowired
     private TbQuestionMapper tbQuestionMapper;
 
+    @Autowired
+    private TbTagService tbTagService;
+
     /**
      * 修改问题页面
      * @param id
@@ -35,6 +42,8 @@ public class PublishController {
     public String edit(@PathVariable("id")Long id,Model model){
 
         TbQuestion question = tbQuestionMapper.selectByPrimaryKey(id);
+        List<TagDTO> allTag = tbTagService.findAllTag();
+        model.addAttribute("tagDTOS",allTag);
         model.addAttribute("question",question);
 
         return "publish";
@@ -48,6 +57,8 @@ public class PublishController {
      */
     @RequestMapping("/publish")
     public String showPublish(Model model){
+        List<TagDTO> allTag = tbTagService.findAllTag();
+        model.addAttribute("tagDTOS",allTag);
         model.addAttribute("question",new QuestionDTO());
         return "publish";
     }
@@ -61,6 +72,8 @@ public class PublishController {
      */
     @PostMapping("/publish")
     public String doPublish(TbQuestion tbQuestion, Model model, HttpServletRequest request){
+        List<TagDTO> allTag = tbTagService.findAllTag();
+        model.addAttribute("tagDTOS",allTag);
         model.addAttribute("title",tbQuestion.getTitle());
         model.addAttribute("description",tbQuestion.getDescription());
         model.addAttribute("tag",tbQuestion.getTag());
@@ -77,6 +90,15 @@ public class PublishController {
             model.addAttribute("error","标签不能为空");
             return "publish";
         }
+        if(tbQuestion.getTag() != null || !tbQuestion.getTag().equals("")){
+            String invalid = tbTagService.filterInvalid(tbQuestion.getTag());
+            if(!StringUtils.isBlank(invalid)){
+                model.addAttribute("error",invalid+"非法标签");
+                return "publish";
+            }
+        }
+
+
         TbUser user = (TbUser) request.getSession().getAttribute("user");
         if(user == null){
             return "redirect:/";

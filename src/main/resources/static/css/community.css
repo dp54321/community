@@ -14,3 +14,9 @@ body{
     font-weight: normal;
     color: #999;
 }
+
+.tag-table .label-info{
+    white-space: normal;
+    margin: 5px 5px;
+    display:inline-block;
+}

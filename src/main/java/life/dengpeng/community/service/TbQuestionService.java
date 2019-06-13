@@ -13,6 +13,7 @@ import life.dengpeng.community.model.TbQuestion;
 import life.dengpeng.community.model.TbQuestionExample;
 import life.dengpeng.community.model.TbUser;
 import life.dengpeng.community.model.TbUserExample;
+import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TbQuestionService {
@@ -194,5 +196,25 @@ public class TbQuestionService {
         tbQuestionExtMapper.incView(updateQuestion);
     }
 
+    //相关问题
+    public List<QuestionDTO> selectByTag(QuestionDTO questionDTO) {
+        TbQuestion question = new TbQuestion();
+        question.setId(questionDTO.getId());
+        String tag = questionDTO.getTag();
+        if(StringUtils.isBlank(tag)){
+                return new ArrayList<>();
+        }
+        String replace = StringUtils.replace(tag, ",", "|");
+        System.out.println(replace);
+        question.setTag(replace);
+        List<TbQuestion> tbQuestions = tbQuestionExtMapper.selectByTag(question);
+        List<QuestionDTO> collect = tbQuestions.stream().map(q -> {
+            QuestionDTO questionDTO1 = new QuestionDTO();
+            BeanUtils.copyProperties(q, questionDTO1);
+            return questionDTO1;
+        }).collect(Collectors.toList());
 
+
+        return collect;
+    }
 }

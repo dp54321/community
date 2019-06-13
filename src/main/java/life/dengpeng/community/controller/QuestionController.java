@@ -31,13 +31,17 @@ public class QuestionController {
      */
     @GetMapping("/question/{id}")
     public String question(@PathVariable(name = "id") Long id,Model model){
-
+        //问题详情
         QuestionDTO question = tbQuestionService.findQuestionById(id);
+        //相关问题
+        List<QuestionDTO> questionDTOS = tbQuestionService.selectByTag(question);
 
+        //评论
         List<ResponseCommentDTO> commentDTOS = tbCommentService.findCommentByParentId(id,1);
         tbQuestionService.incView(id);
 
         model.addAttribute("question",question);
+        model.addAttribute("questionDTOS",questionDTOS);
         model.addAttribute("comments",commentDTOS);
         return "question";
     }

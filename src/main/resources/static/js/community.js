@@ -123,4 +123,22 @@ function toComment(e) {
 
 
 }
+
+
+function openTags(){
+    $("#tagList").show();
+}
+
+function selectTag(e) {
+    var tagName = e.innerText;
+    var tag = $("#tag").val();
+    if(tag){
+        var strings = tag.split(",");
+        if(strings.indexOf(tagName) == -1){
+            $("#tag").val(tag+","+tagName);
+        }
+    }else{
+        $("#tag").val(tagName);
+    }
+}
     

@@ -26,4 +26,14 @@
     where id = #{id}
   </update>
 
+  
+  <select id="selectByTag" parameterType="life.dengpeng.community.model.TbQuestion" resultMap="BaseResultMap">
+
+    select * FROM
+        (select * from tb_question where tag regexp #{tag} and id != #{id} ORDER BY view_count DESC)
+        as question limit 10
+
+  </select>
+
+
 </mapper>

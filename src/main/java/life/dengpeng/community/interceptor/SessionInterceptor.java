@@ -1,6 +1,8 @@
 package life.dengpeng.community.interceptor;
 
+import life.dengpeng.community.mapper.TbNotifyMapper;
 import life.dengpeng.community.mapper.TbUserMapper;
+import life.dengpeng.community.model.TbNotifyExample;
 import life.dengpeng.community.model.TbUser;
 import life.dengpeng.community.model.TbUserExample;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,8 @@ public class SessionInterceptor implements HandlerInterceptor {
 
     @Autowired
     private TbUserMapper tbUserMapper;
+    @Autowired
+    private TbNotifyMapper tbNotifyMapper;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -32,6 +36,10 @@ public class SessionInterceptor implements HandlerInterceptor {
                     List<TbUser> tbUsers = tbUserMapper.selectByExample(example);
                     if (tbUsers != null && tbUsers.size()>0) {
                         request.getSession().setAttribute("user", tbUsers.get(0));
+                        TbNotifyExample notifyExample = new TbNotifyExample();
+                        notifyExample.createCriteria().andReceiverEqualTo(tbUsers.get(0).getUid()).andStatusEqualTo(0);
+                        long notifyCount = tbNotifyMapper.countByExample(notifyExample);
+                        request.getSession().setAttribute("notifyCount", notifyCount);
                         break;
                     }
                 }

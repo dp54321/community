@@ -39,10 +39,10 @@ public class TbQuestionService {
 
     //查询全部记录
     public PageDTO findQuestionPage(Integer page, Integer size){
-        PageDTO pageDTO = new PageDTO();
         Integer total = (int) tbQuestionMapper.countByExample(new TbQuestionExample());
+        PageDTO pageDTO = PageDTO.setPageDTO(total, page, size);
         if(total != null && total >0) {
-            setPageDTO(pageDTO, total, page, size);
+
             ArrayList<QuestionDTO> list = new ArrayList<>();
             int offset = (page - 1) * size;
             TbQuestionExample example = new TbQuestionExample();
@@ -56,17 +56,16 @@ public class TbQuestionService {
 
     //根据用户查询自己的所有记录
     public PageDTO findQuestionByUserId(Long userId,Integer page, Integer size){
-        PageDTO pageDTO = new PageDTO();
         TbQuestionExample example = new TbQuestionExample();
         example.createCriteria().andCreatorEqualTo(userId);
         Integer total = (int)tbQuestionMapper.countByExample(example);//个人总记录
+        PageDTO pageDTO = PageDTO.setPageDTO(total, page, size);
         if(total != null && total >0) {
-            setPageDTO(pageDTO, total, page, size);
             ArrayList<QuestionDTO> list = new ArrayList<>();
             TbQuestionExample example1 = new TbQuestionExample();
             example1.createCriteria().andCreatorEqualTo(userId);
             example1.setOrderByClause("gmt_create desc");
-            int offset = (pageDTO.getPage() - 1) * size;
+            int offset = (page - 1) * size;
             List<TbQuestion> tbQuestions = tbQuestionMapper.selectByExampleWithRowbounds(example1, new RowBounds(offset, size));
             questionToDTO(list, tbQuestions);
             pageDTO.setRows(list);
@@ -74,58 +73,7 @@ public class TbQuestionService {
         return pageDTO;
     }
 
-    //赋值PageDTO 分页
-    public PageDTO setPageDTO(PageDTO pageDTO,Integer total,Integer page,Integer size) {
 
-
-        pageDTO.setTotal(total); //总记录
-        if (total % size == 0) {   //总页数
-            pageDTO.setTotalPage(total / size);
-        } else {
-            pageDTO.setTotalPage(total / size + 1);
-        }
-
-        if(page < 1){
-            page = 1;
-        }
-        if(page > pageDTO.getTotalPage()){
-            page = pageDTO.getTotalPage();
-        }
-        pageDTO.setPage(page);  //当前页
-        List<Integer> pages = new ArrayList<>();
-        pages.add(page);
-        for(int i=1;i<=2;i++){
-            if(page-i>0){   //向前追加两个页码
-                pages.add(0,page-i);
-            }
-            if(page+i<=pageDTO.getTotalPage()){  //向后追加两个页码
-                pages.add(page+i);
-            }
-        }
-
-        pageDTO.setPages(pages);
-
-        if (pageDTO.getPages().contains(1)) { //是否显示首页
-            pageDTO.setFirstPage(false);
-        } else {
-            pageDTO.setFirstPage(true);
-        }
-
-        if (pageDTO.getPages().contains(pageDTO.getTotalPage())) {  //是否显示尾页
-            pageDTO.setEndPage(false);
-        } else {
-            pageDTO.setEndPage(true);
-        }
-
-        if (page > 1) {  //是否显示上一页
-            pageDTO.setLastPage(true);
-        }
-        if(page<pageDTO.getTotalPage()){  //是否显示下一页
-            pageDTO.setNextPage(true);
-        }
-        return pageDTO;
-
-    }
 
     //将类转换成DTO
     public void questionToDTO(ArrayList<QuestionDTO> list, List<TbQuestion> questionList) {
@@ -196,7 +144,7 @@ public class TbQuestionService {
         tbQuestionExtMapper.incView(updateQuestion);
     }
 
-    //相关问题
+    //根据标签查询相关问题
     public List<QuestionDTO> selectByTag(QuestionDTO questionDTO) {
         TbQuestion question = new TbQuestion();
         question.setId(questionDTO.getId());
@@ -205,7 +153,6 @@ public class TbQuestionService {
                 return new ArrayList<>();
         }
         String replace = StringUtils.replace(tag, ",", "|");
-        System.out.println(replace);
         question.setTag(replace);
         List<TbQuestion> tbQuestions = tbQuestionExtMapper.selectByTag(question);
         List<QuestionDTO> collect = tbQuestions.stream().map(q -> {

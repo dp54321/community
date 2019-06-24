@@ -2,6 +2,7 @@ package life.dengpeng.community.controller;
 
 import life.dengpeng.community.dto.PageDTO;
 import life.dengpeng.community.model.TbUser;
+import life.dengpeng.community.service.TbNotifyService;
 import life.dengpeng.community.service.TbQuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,12 +14,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletRequest;
 
 
-
 @Controller
 public class ProfileController {
 
     @Autowired
     private TbQuestionService tbQuestionService;
+    @Autowired
+    private TbNotifyService tbNotifyService;
 
 
     /**
@@ -41,13 +43,14 @@ public class ProfileController {
             return "redirect:/";
         }
         if("questions".equals(action)){
-            PageDTO pageDTO = tbQuestionService.findQuestionByUserId(user.getUid(), page, size);
-            model.addAttribute("pageDTO",pageDTO);
+            PageDTO pageQuestionDTO = tbQuestionService.findQuestionByUserId(user.getUid(), page, size);
+            model.addAttribute("pageDTO",pageQuestionDTO);
             model.addAttribute("section","questions");
             model.addAttribute("sectionName","我的问题");
 
         }else if("repies".equals(action)){
-            model.addAttribute("pageDTO",new PageDTO());
+            PageDTO pageNotifyDTO = tbNotifyService.findNotifyByReceiver(user.getUid(), page, size);
+            model.addAttribute("pageDTO",pageNotifyDTO);
             model.addAttribute("section","repies");
             model.addAttribute("sectionName","最新回复");
         }

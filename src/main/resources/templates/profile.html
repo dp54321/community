@@ -18,7 +18,7 @@
         <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
             <h2 th:text="${sectionName}"></h2>
             <hr>
-            <div class="media" th:each="question : ${pageDTO.rows}">
+            <div class="media" th:if="${section=='questions'}" th:each="question : ${pageDTO.rows}">
                 <div class="media-left">
                     <a href="#">
                         <img class="img-circle" th:src="${question.tbUser.avatarUrl}"  style="width: 42px;height: 42px">
@@ -35,6 +35,20 @@
 
 
             </div>
+
+            <div class="media" th:if="${section=='repies'}" th:each="notify : ${pageDTO.rows}">
+
+                <div class="media-body">
+                   <span th:text="${notify.tbUser.uname}"></span>
+                    <span th:text="${notify.typeName}"></span>
+                    <a th:href="@{'/notify/'+${notify.notifyId}}"><span th:text="${notify.title}"></span></a>
+                    <span th:class="${notify.status==0?'label label-danger':'label label-success'}" th:text="${notify.status==0 ?'未读':'已读'}"></span>
+                </div>
+
+
+            </div>
+
+
 
             <nav aria-label="Page navigation" th:if="${pageDTO.rows != null}">
                 <ul class="pagination">
@@ -76,7 +90,7 @@
                     我的问题
                 </a>
                 <a th:href="@{'/profile/repies'}" th:class="${section == 'repies'?'list-group-item disabled':'list-group-item'}">
-                    最新回复
+                    最新回复<span class="badge" th:text="${session.notifyCount}"></span>
                 </a>
 
 

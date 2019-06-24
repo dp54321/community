@@ -12,7 +12,7 @@ $(document).ready(function () {
     $("#login").attr("href", "https://github.com/login/oauth/authorize?client_id=fb0fba96031d94894be3&redirect_uri=http://localhost:8887/callback&scope=user&state=1&redirect_url=" + url);
 }*/
 
-function post(parentId, type, conent) {
+function post(parentId, type, content) {
     $.ajax({
         type: "post",
         url: "/comment",
@@ -21,7 +21,7 @@ function post(parentId, type, conent) {
         data: JSON.stringify({
             "parentId": parentId,
             "type": type,
-            "content": conent
+            "content": content
         }),
         success: function (response) {
             if (response.code == 200) {
@@ -40,17 +40,17 @@ function post(parentId, type, conent) {
 function addComment() {
     var parentId = $("#parent_id").val();
     var type = $("#type").val();
-    var conent = $("#content").val();
-    // alert(conent);
-    post(parentId, type, conent);
+    var content = $("#content").val();
+    post(parentId, type, content);
 };
 
 /*添加二级评论数据*/
-function addToComment() {
-    var id = $("#commentId").val();
-    var conent = $("#toContent").val();
-    post(id, 2, conent);
-}
+ function addToComment(e) {
+     var id = e.getAttribute("data-id");
+     var content = $("#content-" + id).val();
+     // console.log(id);
+     post(id, 2, content);
+ }
 
 /*展开和折叠二级评论*/
 function toComment(e) {

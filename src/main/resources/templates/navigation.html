@@ -32,6 +32,9 @@
                     <li th:if="${session.user != null}">
                         <a href="/publish"><span class="glyphicon glyphicon-plus" aria-hidden="true">发布</span></a>
                     </li>
+                    <li th:if="${session.user != null}">
+                        <a href="/profile/repies"><span class="glyphicon glyphicon-bell "></span> <span class="badge" th:text="${session.notifyCount}"></span></a>
+                    </li>
                     <li class="dropdown" th:if="${session.user != null}">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" >
                             <span th:text="${session.user.getUname()}"></span>

@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="/css/community.css">
     <link rel="stylesheet" href="/css/question.css">
+    <link rel="stylesheet" href="/editormd/css/editormd.preview.css" />
     <script src="/js/jquery-2.1.0.min.js"></script>
     <script src="/js/bootstrap.min.js" type="application/javascript"></script>
     <script src="/js/moment.js" type="application/javascript"></script>
@@ -28,7 +29,9 @@
             </span>
 
             <hr>
-            <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12" th:text="${question.description}"></div><br>
+            <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12" id="question-content">
+                <textarea style="display:none;" th:text="${question.description}"></textarea>
+            </div><br>
             <hr>
             <span class="glyphicon glyphicon-pencil" aria-hidden="true" th:if="${session.user != null && session.user.uid == question.tbUser.uid}">
             <a  th:href="@{'/publish/'+${question.id}}">编辑</a></span>
@@ -71,31 +74,9 @@
                         </div>
                         <!--二级评论-->
                         <div class="collapse col-lg-12 col-md-12 col-sm-12 col-xs-12" th:id="${'comment-'+comment.id}">
-                           <!-- <div class="well">
-                                <div class="media" th:each="comment : ${comments}">
-                                    <div class="media-left">
-                                        <a href="#">
-                                            <img class="img-circle" th:src="${comment.tbUser.avatarUrl}"
-                                                 style="width: 42px;height: 42px">
-                                        </a>
-                                    </div>
-                                    <div class="media-body">
-                                        <h6 class="media-heading">
-                                            <span th:text="${comment.tbUser.uname}"></span>
-                                        </h6>
-                                        <h4><span th:text="${comment.content}"></span></h4>
-                                    </div>
-                                    <div class="menu">
-                                    <span style="float: right"
-                                          th:text="${#dates.format(comment.gmtCreate, 'yyyy-MM-dd')}"></span>
-                                    </div>
-                                    <hr>
-                                </div>
-                            </div>-->
                             <div>
-                                <input type="hidden" th:value="${comment.id}" id="commentId">
-                                <input type="text" class="form-control" id="toContent" placeholder="评论内容...">
-                                <button type="button" class="btn btn-success" onclick="addToComment()" style="float: right;margin-top: 5px">评论</button>
+                                <input type="text" class="form-control" th:id="${'content-'+comment.id}" placeholder="评论内容...">
+                                <button type="button" class="btn btn-success" onclick="addToComment(this)" th:data-id="${comment.id}" style="float: right;margin-top: 5px">评论</button>
                             </div>
                         </div>
                         <hr>
@@ -141,3 +122,15 @@
 
 </body>
 </html>
+<script src="/editormd/editormd.js"></script>
+<script src="/editormd/lib/marked.min.js"></script>
+<script src="/editormd/lib/prettify.min.js"></script>
+<script type="text/javascript">
+    $(function() {
+        var testView = editormd.markdownToHTML("question-content", {
+            // markdown : "[TOC]\n### Hello world!\n## Heading 2", // Also, you can dynamic set Markdown text
+            // htmlDecode : true,  // Enable / disable HTML tag encode.
+            // htmlDecode : "style,script,iframe",  // Note: If enabled, you should filter some dangerous HTML tags for website security.
+        });
+    });
+</script>

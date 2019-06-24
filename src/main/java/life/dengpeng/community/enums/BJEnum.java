@@ -11,7 +11,8 @@ public enum BJEnum implements IBJEnum{
     SYS_ERROR(2005,"系统出现错误,请稍后再试"),
     NO_COMMENT(2006,"没有该评论类型"),
     QUESTION_COMMENT_NOT_FOUND(2007,"你评论的问题或评论可能被删除"),
-    COMMENT_NULL(2008,"评论内容为空");
+    COMMENT_NULL(2008,"评论内容为空"),
+    NOTIFY_QUESTION_NULL(2009,"这个问题可能删除了");
     private String message;
 
     private Integer code;

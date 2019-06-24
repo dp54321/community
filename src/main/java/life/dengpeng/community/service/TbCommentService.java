@@ -3,6 +3,7 @@ package life.dengpeng.community.service;
 import life.dengpeng.community.dto.CommentDTO;
 import life.dengpeng.community.dto.ResponseCommentDTO;
 import life.dengpeng.community.enums.BJEnum;
+import life.dengpeng.community.enums.NotifyTypeEnum;
 import life.dengpeng.community.exception.BJException;
 import life.dengpeng.community.mapper.*;
 import life.dengpeng.community.model.*;
@@ -31,6 +32,8 @@ public class TbCommentService {
     private TbUserMapper tbUserMapper;
     @Autowired
     private TbCommentExtMapper tbCommentExtMapper;
+    @Autowired
+    private TbNotifyMapper tbNotifyMapper;
 
 
     @Transactional
@@ -52,10 +55,9 @@ public class TbCommentService {
             throw new BJException(BJEnum.QUESTION_COMMENT_NOT_FOUND);
         }
 
-
+        TbQuestion dbQuestion = tbQuestionMapper.selectByPrimaryKey(comment.getParentId());
         if(comment.getType() == 1){
-            TbQuestion question = tbQuestionMapper.selectByPrimaryKey(comment.getParentId());
-            if(question == null) {
+            if(dbQuestion == null) {
                 throw new BJException(BJEnum.COMMENT_QUESTION_NOT_FOUND);
             }
         }
@@ -75,6 +77,9 @@ public class TbCommentService {
             addCommentCount.setId(dbComment.getId());
             addCommentCount.setCommentCount(1L);
             tbCommentExtMapper.incComment(addCommentCount);
+            //通知
+            TbNotify notify = getTbNotify(comment,dbComment.getParentId(), dbComment.getCommentator(),dbComment.getContent(),NotifyTypeEnum.REPLY_QUESTION.getType());
+            tbNotifyMapper.insert(notify);
 
         }else {
             tbCommentMapper.insert(comment);
@@ -82,7 +87,22 @@ public class TbCommentService {
             question.setId(comment.getParentId());
             question.setCommentCount(1);
             tbQuestionExtMapper.incComment(question);
+            //通知
+            TbNotify notify = getTbNotify(comment,comment.getParentId(), dbQuestion.getCreator(),dbQuestion.getTitle(),NotifyTypeEnum.REPLY_COMMENT.getType());
+            tbNotifyMapper.insert(notify);
         }
+    }
+
+    private TbNotify getTbNotify(TbComment comment,Long parentId, Long receiver,String title,Integer type) {
+        TbNotify notify = new TbNotify();
+        notify.setNotifier(comment.getCommentator());
+        notify.setReceiver(receiver);
+        notify.setNotifyName(title);
+        notify.setType(type);
+        notify.setStatus(0);
+        notify.setQuestionid(parentId);
+        notify.setGmtCreate(System.currentTimeMillis());
+        return notify;
     }
 
     //查询问题评论列表

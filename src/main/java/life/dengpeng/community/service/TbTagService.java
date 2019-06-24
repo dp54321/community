@@ -37,7 +37,6 @@ public class TbTagService {
         TagDTO tagDTO4 = new TagDTO("数据库");
         TagDTO tagDTO5 = new TagDTO("开发工具");
         TagDTO tagDTO6 = new TagDTO("其他");
-        System.out.println(tbTags.size());
         for (TbTag tag : tbTags) {
             if (tag.getType() == 1) {
                 tagDTO1.getTags().add(tag.getTagName());

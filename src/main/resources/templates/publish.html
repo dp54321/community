@@ -25,7 +25,7 @@
                 <input type="hidden" name="id" th:value="${question.id}">
                 <div class="form-group">
                     <label for="title">问题标题 (简单扼要) ：</label>
-                    <input type="text" class="form-control" id="title" name="title" th:value="${question.title}"  placeholder="问题标题...">
+                    <input type="text" class="form-control" id="title" name="title" th:value="${question.title}" autocomplete="off"  placeholder="问题标题...">
                    <!-- <select class="form-control">
                         <option selected>选择分类</option>
                         <option>2</option>
@@ -88,10 +88,10 @@
             saveHTMLToTextarea : true,
             syncScrolling: "single",
             emoji: true,//表情
-            /**上传图片相关配置
-           imageUpload : true,
+            /**上传图片相关配置*/
+            imageUpload : true,
             imageFormats : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
-            imageUploadURL : "/editorMDUpload",//上传图片服务地址*/
+            imageUploadURL : "/uploadImage",//上传图片服务地址
             theme: "gray"  //顶部的主题
         });
     });

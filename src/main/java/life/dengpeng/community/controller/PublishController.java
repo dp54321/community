@@ -2,19 +2,22 @@ package life.dengpeng.community.controller;
 
 import life.dengpeng.community.dto.QuestionDTO;
 import life.dengpeng.community.dto.TagDTO;
+import life.dengpeng.community.dto.UploadImageDTO;
+import life.dengpeng.community.enums.BJEnum;
+import life.dengpeng.community.exception.BJException;
 import life.dengpeng.community.mapper.TbQuestionMapper;
 import life.dengpeng.community.model.TbQuestion;
 import life.dengpeng.community.model.TbUser;
 import life.dengpeng.community.service.TbQuestionService;
 import life.dengpeng.community.service.TbTagService;
+import life.dengpeng.community.util.FastDFSClient;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -31,6 +34,9 @@ public class PublishController {
 
     @Autowired
     private TbTagService tbTagService;
+
+    @Value("${FILE_SERVER_URL}")
+    private String FILE_SERVER_URL;
 
     /**
      * 修改问题页面
@@ -101,7 +107,7 @@ public class PublishController {
 
         TbUser user = (TbUser) request.getSession().getAttribute("user");
         if(user == null){
-            return "redirect:/";
+            throw new BJException(BJEnum.NO_LOGIN);
         }
         tbQuestion.setCreator(user.getUid());
         tbQuestion.setGmtCreate(System.currentTimeMillis());
@@ -115,6 +121,26 @@ public class PublishController {
 
 
 
+    @RequestMapping("/uploadImage")
+    @ResponseBody
+    public UploadImageDTO uploadImage(@RequestParam(value = "editormd-image-file")MultipartFile file){
+
+        String filename = file.getOriginalFilename(); //获取文件名
+        String extName = filename.substring(filename.lastIndexOf(".") + 1);
+        UploadImageDTO uploadImageDTO = new UploadImageDTO();
+        try {
+            FastDFSClient fastDFSClient = new FastDFSClient("classpath:conf/fdfs_client.conf");
+            String uploadFile = fastDFSClient.uploadFile(file.getBytes(), extName);
+            uploadImageDTO.setSuccess(1);
+            uploadImageDTO.setMessage("上传成功");
+            uploadImageDTO.setUrl(FILE_SERVER_URL+uploadFile);
+        } catch (Exception e) {
+            uploadImageDTO.setSuccess(0);
+            uploadImageDTO.setMessage("上传失败，正在修复，请稍后...");
+            e.printStackTrace();
+        }
+        return uploadImageDTO;
+    }
 
 
 
